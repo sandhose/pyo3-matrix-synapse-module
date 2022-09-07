@@ -1,0 +1,18 @@
+[package]
+name = "pyo3-matrix-synapse-module"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pyo3 = "0.16"
+pyo3-twisted-web = { git = "https://github.com/sandhose/pyo3-twisted-web.git" }
+tower-service = "0.3"
+http = "0.2"
+bytes = "1.2"
+serde = "1"
+serde_json = "1"
+
+[workspace]
+members = ["demo"]
