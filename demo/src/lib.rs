@@ -21,14 +21,17 @@
     clippy::needless_pass_by_value
 )]
 
-use std::convert::Infallible;
+use std::{convert::Infallible, time::Duration};
 
 use bytes::Bytes;
+use futures_util::StreamExt;
 use http::{Request, Response};
+use http_body::{Body, Full};
 use pyo3::prelude::*;
 use serde::Deserialize;
 
 use pyo3_matrix_synapse_module::{parse_config, ModuleApi};
+use tokio_stream::wrappers::IntervalStream;
 
 #[pyclass]
 #[derive(Deserialize)]
@@ -43,8 +46,18 @@ pub struct DemoModule;
 impl DemoModule {
     #[new]
     fn new(config: &Config, module_api: ModuleApi) -> PyResult<Self> {
-        let service = tower::service_fn(|_request: Request<Bytes>| async move {
-            let response = Response::new(Bytes::from_static(b"Hello, Rust!"));
+        let service = tower::service_fn(|_request: Request<Full<Bytes>>| async move {
+            let interval = tokio::time::interval(Duration::from_millis(500));
+            let stream = IntervalStream::new(interval)
+                .take(3)
+                .enumerate()
+                .map(|(i, instant)| {
+                    Ok::<_, Infallible>(Bytes::from(format!("Tick {i} (at {instant:?})\n")))
+                });
+
+            let body = hyper::Body::wrap_stream(stream).map_err(anyhow::Error::from);
+
+            let response = Response::new(body);
             Ok::<_, Infallible>(response)
         });
 

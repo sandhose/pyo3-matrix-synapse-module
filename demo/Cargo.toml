@@ -9,9 +9,15 @@ name = "demo"
 crate-type = ["cdylib"]
 
 [dependencies]
+anyhow = "1"
 bytes = "1.2"
 http = "0.2"
-pyo3 = { version = "0.16", features = ["extension-module"] }
+http-body = "0.4"
+pyo3 = { version = "0.16", features = ["extension-module", "anyhow"] }
 pyo3-matrix-synapse-module = { path = "../" }
 serde = { version = "1", features = ["derive"] }
 tower = "0.4"
+tokio = { version = "1.21", features = ["time"] }
+tokio-stream = { version = "0.1", features = ["time"] }
+futures-util = "0.3"
+hyper = { version = "0.14", features = ["stream"] }

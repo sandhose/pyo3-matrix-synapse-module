@@ -16,9 +16,10 @@
 #![deny(clippy::all)]
 #![warn(clippy::pedantic)]
 
-use bytes::Bytes;
+use bytes::{Buf, Bytes};
 use http::{Request, Response};
-use pyo3::{exceptions::PyValueError, FromPyObject, PyAny, PyErr, PyResult};
+use http_body::{Body, Full};
+use pyo3::{exceptions::PyValueError, types::PyType, FromPyObject, PyAny, PyErr, PyResult};
 use pyo3_twisted_web::Resource;
 use serde::Deserialize;
 use tower_service::Service;
