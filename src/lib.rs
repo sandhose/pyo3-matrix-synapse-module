@@ -36,20 +36,39 @@ impl<'a> ModuleApi<'a> {
     /// Returns an error if the call to `ModuleApi.register_web_resource` failed
     pub fn register_web_service<S, B, E>(&self, path: &str, service: S) -> PyResult<()>
     where
-        S: Service<Request<Bytes>, Response = Response<B>, Error = E> + Clone + Send + 'static,
+        S: Service<Request<Full<Bytes>>, Response = Response<B>, Error = E>
+            + Clone
+            + Send
+            + 'static,
         S::Future: Send,
-        B: Into<Bytes>,
+        B: Body + Send + 'static,
+        B::Data: Buf + 'static,
+        B::Error: Into<PyErr> + 'static,
         E: Into<PyErr> + 'static,
     {
-        self.inner
-            .call_method1("register_web_resource", (path, Resource::new(service)))?;
+        self.inner.call_method1(
+            "register_web_resource",
+            (path, Resource::from_service(service)),
+        )?;
         Ok(())
     }
 }
 
 impl<'a> FromPyObject<'a> for ModuleApi<'a> {
     fn extract(inner: &'a PyAny) -> PyResult<Self> {
-        Ok(Self { inner })
+        let module_api_cls = inner
+            .py()
+            .import("synapse.module_api")?
+            .getattr("ModuleApi")?
+            .downcast::<PyType>()?;
+
+        if inner.is_instance(module_api_cls)? {
+            Ok(Self { inner })
+        } else {
+            Err(PyValueError::new_err(
+                "Object is not a synapse.module_api.ModuleApi",
+            ))
+        }
     }
 }
 
