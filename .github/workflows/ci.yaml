@@ -105,7 +105,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: minimal-versions
-          args: check --tests --examples --bins --benches --workspace
+          args: check --tests --examples --bins --benches -p pyo3-matrix-synapse-module
 
   test:
     name: Run test suite with Rust ${{ matrix.toolchain }}
