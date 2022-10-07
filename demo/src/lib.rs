@@ -52,7 +52,7 @@ impl DemoModule {
                 .take(3)
                 .enumerate()
                 .map(|(i, instant)| {
-                    Ok::<_, Infallible>(Bytes::from(format!("Tick {i} (at {instant:?})\n")))
+                    Ok::<_, Infallible>(Bytes::from(format!("Tick {} (at {:?})\n", i, instant)))
                 });
 
             let body = hyper::Body::wrap_stream(stream).map_err(anyhow::Error::from);
