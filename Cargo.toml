@@ -9,8 +9,8 @@ edition = "2021"
 bytes = "1.2"
 http = "0.2"
 http-body = "0.4"
-pyo3 = "0.16"
-pyo3-asyncio = { version = "0.16", feature = ["tokio-runtime"] }
+pyo3 = "0.17"
+pyo3-asyncio = { version = "0.17" }
 pyo3-twisted-web = { git = "https://github.com/sandhose/pyo3-twisted-web.git" }
 serde = "1"
 serde_json = "1"
