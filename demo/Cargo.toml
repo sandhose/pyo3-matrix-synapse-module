@@ -1,20 +1,24 @@
 [package]
 name = "demo"
 version = "0.1.0"
+authors = ["Quentin Gliech <quenting@element.io>"]
 edition = "2021"
+license = "Apache-2.0"
+description = "A demo Synapse module using pyo3-matrix-synapse-module"
+repository = "https://github.com/sandhose/pyo3-matrix-synapse-module/"
+publish = false
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 name = "demo"
 crate-type = ["cdylib"]
 
 [dependencies]
 anyhow = "1"
-bytes = "1.2"
+bytes = "1"
 http = "0.2"
-http-body = "0.4"
+http-body = "0.4.4"
 pyo3 = { version = "0.17", features = ["extension-module", "anyhow"] }
-pyo3-asyncio = { version = "0.17", feature = ["tokio-runtime"] }
+pyo3-asyncio = { version = "0.17", features = ["tokio-runtime"] }
 pyo3-matrix-synapse-module = { path = "../" }
 serde = { version = "1", features = ["derive"] }
 tower = "0.4"
