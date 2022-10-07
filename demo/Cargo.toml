@@ -21,7 +21,7 @@ pyo3 = { version = "0.17", features = ["extension-module", "anyhow"] }
 pyo3-asyncio = { version = "0.17", features = ["tokio-runtime"] }
 pyo3-matrix-synapse-module = { path = "../" }
 serde = { version = "1", features = ["derive"] }
-tower = "0.4"
+tower = { version = "0.4", default-features = false }
 tokio = { version = "1.21", features = ["time"] }
 tokio-stream = { version = "0.1", features = ["time"] }
 futures-util = "0.3"
