@@ -95,7 +95,7 @@ pub fn parse_config<'a, T: Deserialize<'a>>(config: &'a PyAny) -> PyResult<T> {
         let path: Vec<String> = err
             .path()
             .to_string()
-            .split(".")
+            .split('.')
             .map(ToOwned::to_owned)
             .collect();
 
