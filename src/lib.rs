@@ -24,6 +24,10 @@ use pyo3_twisted_web::Resource;
 use serde::Deserialize;
 use tower_service::Service;
 
+mod synapse {
+    pyo3::import_exception!(synapse.module_api.errors, ConfigError);
+}
+
 pub struct ModuleApi<'a> {
     inner: &'a PyAny,
 }
@@ -84,5 +88,23 @@ pub fn parse_config<'a, T: Deserialize<'a>>(config: &'a PyAny) -> PyResult<T> {
         .call_method1("dumps", (config,))?
         .extract()?;
 
-    serde_json::from_str(config).map_err(|_| PyValueError::new_err("failed to convert config"))
+    let deserializer = &mut serde_json::Deserializer::from_str(config);
+    serde_path_to_error::deserialize(deserializer).map_err(|err| {
+        // Figure out the path where the error happened using `serde_path_to_error`
+        // XXX: This is probably good enough for now
+        let path: Vec<String> = err
+            .path()
+            .to_string()
+            .split('.')
+            .map(ToOwned::to_owned)
+            .collect();
+
+        // XXX: This is ugly, but it removes the " at line X column Y" from serde_json's errors
+        let mut message = err.into_inner().to_string();
+        if let Some(idx) = message.rfind(" at line ") {
+            message.truncate(idx);
+        }
+
+        synapse::ConfigError::new_err((message, path))
+    })
 }
