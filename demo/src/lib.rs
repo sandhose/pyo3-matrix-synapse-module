@@ -16,6 +16,7 @@
 #![deny(clippy::all)]
 #![warn(clippy::pedantic)]
 #![allow(
+    clippy::uninlined_format_args,
     clippy::borrow_deref_ref,
     clippy::used_underscore_binding,
     clippy::needless_pass_by_value
