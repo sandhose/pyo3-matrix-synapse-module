@@ -18,7 +18,7 @@ bytes = "1"
 http = "0.2"
 http-body = "0.4.4"
 pyo3 = { version = "0.17", features = ["extension-module", "anyhow"] }
-pyo3-asyncio = { version = "0.17", features = ["tokio-runtime"] }
+pyo3-asyncio = { version = "0.18", features = ["tokio-runtime"] }
 pyo3-matrix-synapse-module = { path = "../" }
 serde = { version = "1", features = ["derive"] }
 tower = { version = "0.4", default-features = false }
